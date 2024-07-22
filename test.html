@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset='utf-8' />
+    <title>Mapbox + GeoServer</title>
+    <meta name='viewport' content='width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no' />
+    <script src='https://api.mapbox.com/mapbox-gl-js/v2.8.1/mapbox-gl.js'></script>
+    <link href='https://api.mapbox.com/mapbox-gl-js/v2.8.1/mapbox-gl.css' rel='stylesheet' />
+    <style>
+        body { margin: 0; padding: 0; }
+        #map { position: absolute; top: 0; bottom: 0; width: 100%; }
+    </style>
+</head>
+<body>
+    <div id='map'></div>
+    <script>
+        mapboxgl.accessToken = 'pk.eyJ1IjoidHVhbjJrMXR2IiwiYSI6ImNsaWlkN3Z2dzF5MjEzZXBmNmNybzUwMTQifQ.1-igydy5eIwov_1pryiTVA';
+        var map = new mapboxgl.Map({
+            container: 'map',
+            style: 'mapbox://styles/mapbox/streets-v11',
+            center: [0, 0],
+            zoom: 2
+        });
+
+        // Add GeoServer layer
+        map.on('load', function () {
+            map.addLayer({
+                'id': 'geoserver-layer',
+                'type': 'raster',
+                'source': {
+                    'type': 'raster',
+                    'tiles': ['http://localhost:8888/geoserver/gwc/service/wmts?tilematrixset=EPSG:3857&Service=WMTS&Request=GetTile&Version=1.1.1&Format=image/png&TileMatrix={z}&TileCol={x}&TileRow={y}'],
+                    'tileSize': 256,
+                },
+                'minzoom': 0,
+                'maxzoom': 22
+            });
+        });
+    </script>
+</body>
+</html>
